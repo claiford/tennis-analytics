@@ -10,7 +10,7 @@ import {
     CaretDownIcon,
     Cross2Icon,
 } from '@radix-ui/react-icons';
-import '../styles.css';
+import './styles.css';
 
 const MatchSelect = () => {
     return (
@@ -57,7 +57,7 @@ const MatchSelect = () => {
 
 const Analytics = () => {
     return (
-        <div className='h-full flex flex-col gap-5 m-5 bg-white rounded-xl'>
+        <div className='Analytics h-full flex flex-col gap-5 m-5 bg-white rounded-xl'>
             <Toolbar.Root className="ToolbarRoot" aria-label="Formatting options">
                 <MatchSelect />
                 <Toolbar.ToggleGroup type="multiple" aria-label="Text formatting">
