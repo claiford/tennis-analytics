@@ -15,7 +15,8 @@ const Landing = () => {
 
     return (
         <div className="Landing h-full flex flex-col items-center">
-            <div className="title-container w-3/4 h-16 flex justify-start items-center bg-white rounded-full my-5 px-10">
+            <div className={`${isLogin ? 'title-container-left' : 'title-container-right'}
+                    w-3/4 h-16 flex justify-start items-center bg-white rounded-full my-5 px-10`}>
                 <p className='text-xl text-white font-major'>TENNIS</p>
                 <Separator.Root className="h-2/5 w-0.5 bg-white mx-2" orientation='vertical' />
                 <p className='text-sm text-white font-major'>match analytics</p>

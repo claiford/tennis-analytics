@@ -3,11 +3,8 @@ import * as Form from '@radix-ui/react-form';
 
 const Login = () => {
     const [form, setForm] = useState({
-        firstname: '',
-        lastname: '',
         email: '',
         password: '',
-        confirm: '',
     })
 
     const handleChange = (e) => {

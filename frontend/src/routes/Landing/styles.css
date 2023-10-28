@@ -1,7 +1,5 @@
 @import '@radix-ui/colors/black-alpha.css';
 @import '@radix-ui/colors/white-alpha.css';
-@import '@radix-ui/colors/violet.css';
-@import '@radix-ui/colors/mauve.css';
 
 .Landing {
     text-align: center;
@@ -9,10 +7,16 @@
 }
 
 .Landing {
-    .title-container {
+    .title-container-left {
         background: #1f2937;
         box-shadow: 15px -15px 20px #1a222e,
             -15px 15px 20px #243040;
+    }
+
+    .title-container-right {
+        background: #1f2937;
+        box-shadow: -15px -15px 51px #161d27,
+            15px 15px 51px #283548;
     }
 
     /* .SeparatorRoot[data-orientation='vertical'] {
