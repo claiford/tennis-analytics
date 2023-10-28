@@ -1,0 +1,100 @@
+@import '@radix-ui/colors/black-alpha.css';
+@import '@radix-ui/colors/white-alpha.css';
+@import '@radix-ui/colors/violet.css';
+@import '@radix-ui/colors/mauve.css';
+
+.Landing {
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.Landing {
+    .title-container {
+        background: #1f2937;
+        box-shadow: 15px -15px 20px #1a222e,
+            -15px 15px 20px #243040;
+    }
+
+    /* .SeparatorRoot[data-orientation='vertical'] {
+        height: 50%;
+    } */
+
+    .option-container:hover {
+        cursor: pointer;
+        background: var(--black-a1)
+    }
+
+    .block-letters {
+        color: var(--black-a4);
+        font-family: 'Major Mono Display';
+        font-size: 150px;
+        font-weight: 400;
+        line-height: 8rem;
+        /* 16px */
+    }
+
+    .block-letters-contrast {
+        color: var(--white-a4);
+        font-size: 145px;
+        font-weight: 700;
+    }
+
+    .form-container-left {
+        background: linear-gradient(45deg, #212c3b, #1c2532);
+        box-shadow: 15px -15px 60px #171e28,
+            -15px 15px 60px #273446;
+    }
+
+    .form-container-right {
+        background: linear-gradient(315deg, #212c3b, #1c2532);
+        box-shadow: -15px -15px 60px #171e28,
+            15px 15px 60px #273446;
+    }
+
+    .landing-btn {
+        min-width: 80px;
+        min-height: 40px;
+        border-radius: 10px;
+        padding: 0 10px;
+        background-color: white;
+    }
+
+    .landing-btn:hover {
+        cursor: pointer;
+        background-color: var(--white-a9);
+    }
+
+    .landing-btn:focus {
+        color: white;
+        background-color: var(--black-a3);
+    }
+
+    .FormField {
+        display: grid;
+        margin-bottom: 10px;
+    }
+
+    .FormLabel {
+        font-size: 15px;
+        line-height: 35px;
+        color: white;
+    }
+
+    .FormMessage {
+        font-size: 13px;
+        color: lightpink;
+        opacity: 0.8;
+    }
+
+    .Input {
+        height: 35px;
+        border-radius: 10px;
+        color: white;
+        background-color: var(--black-a5);
+        padding: 0 10px;
+    }
+
+    .Input:hover {
+        box-shadow: 0 0 2px 2px white;
+    }
+}
