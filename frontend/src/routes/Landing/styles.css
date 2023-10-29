@@ -68,7 +68,7 @@
         background-color: var(--white-a9);
     }
 
-    .landing-btn:focus {
+    .landing-btn:active {
         color: white;
         background-color: var(--black-a3);
     }

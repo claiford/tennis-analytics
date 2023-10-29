@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { signOut } from "../../api";
 
 const pathIcons = {
     dashboard: '🏠'
@@ -16,13 +17,17 @@ const Utilities = () => {
         }
     }
 
+    const handleLogout = () => {
+        signOut()
+    }
+
     return (
         <div className='flex flex-row w-full py-5 px-8 justify-between'>
             <div className='text-white'>
                 <p>Pages{pathString}</p>
             </div>
             <div className='flex-none'>
-                <span>🙍</span>
+                <span onClick={handleLogout}>🙍</span>
                 <span>⚙️</span>
             </div>
         </div>
