@@ -89,7 +89,7 @@ const Signup = () => {
                             <Form.Message className="FormMessage" match="valueMissing">
                                 {form.password.length > 0 ? "Does not match" : "-"}
                             </Form.Message>
-                            <Form.Message className="FormMessage" match={(value, formData) => value !== formData.password}>
+                            <Form.Message className="FormMessage" match={(value) => value !== form.password}>
                                 Does not match
                             </Form.Message>
                         </div>
