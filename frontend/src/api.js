@@ -5,10 +5,20 @@ import supabase from './connnections';
 
 export async function signUpNewUser(formData) {
     console.log(formData)
-    const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-    })
+    try {
+        const { data, error } = await supabase.auth.signUp({
+            email: formData.email,
+            password: formData.password,
+        })
+
+        await supabase
+            .from('profiles')
+            .update({ first_name: formData.firstname, last_name: formData.lastname })
+            .eq('id', data.user.id)
+
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 export async function signInWithEmail(formData) {
