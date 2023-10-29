@@ -9,7 +9,7 @@ import Matches from './routes/Matches/Matches';
 import Analytics from './routes/Analytics/Analytics';
 import Profile from './routes/Profile/Profile';
 
-import { supabase } from './api';
+import supabase from './connnections';
 
 function App() {
   const [session, setSession] = useState(null)

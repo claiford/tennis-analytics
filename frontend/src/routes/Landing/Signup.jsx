@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import * as Form from '@radix-ui/react-form';
 
+import { signUpNewUser } from '../../api';
+
 const Signup = () => {
     const [form, setForm] = useState({
         firstname: '',
@@ -11,7 +13,6 @@ const Signup = () => {
     })
 
     const handleChange = (e) => {
-        console.log(e.target.name)
         setForm(prevForm => {
             return {
                 ...prevForm,
@@ -20,9 +21,14 @@ const Signup = () => {
         })
     }
 
+    const handleSignup = (e) => {
+        e.preventDefault()
+        signUpNewUser(form)
+    }
+
     return (
         <div>
-            <Form.Root className='FormRoot p-5'>
+            <Form.Root className='FormRoot p-5' onSubmit={handleSignup}>
                 <Form.Field className="FormField" name="firstname">
                     <div className="flex justify-between items-baseline">
                         <Form.Label className="FormLabel">First Name</Form.Label>
@@ -80,7 +86,7 @@ const Signup = () => {
                         <Form.Message className="FormMessage" match="valueMissing">
                             {form.password.length > 0 ? "Does not match" : "-"}
                         </Form.Message>
-                        <Form.Message className="FormMessage" match={(value, formData) => value !== formData.password}>
+                        <Form.Message className="FormMessage" match={(value) => value !== form.password}>
                             Does not match
                         </Form.Message>
                     </div>
@@ -89,10 +95,8 @@ const Signup = () => {
                     </Form.Control>
                 </Form.Field>
 
-                <Form.Submit className="mt-5">
-                    <button className="landing-btn">
+                <Form.Submit className="landing-btn mt-5">
                         Signup
-                    </button>
                 </Form.Submit>
             </Form.Root>
         </div>
