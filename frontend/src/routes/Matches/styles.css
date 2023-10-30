@@ -1,0 +1,15 @@
+.Matches {
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.Matches {
+    .TabTrigger[data-state='active'] {
+        background-color: #283149;
+        color: white;
+    }
+    
+    .match-container {
+        background-color: #404b69;
+    }
+}
