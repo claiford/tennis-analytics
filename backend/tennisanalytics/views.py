@@ -26,8 +26,13 @@ def openMatches(request):
 
 def matches(request):
     try:
-        response = supabase.table('matches').select("*").execute()
-        return JsonResponse(response.data, safe=False)
+        matches = supabase.table('matches').select("*").execute()
+        mappings = supabase.table('profile_match_mapping').select("*").execute()
+        
+        return JsonResponse({
+            'matches': matches.data,
+            'mapping': mappings.data
+        }, safe=False)
     except Exception as e:
         print(e)
         return HttpResponseBadRequest("Bad Request")
@@ -50,7 +55,27 @@ def createMatch(request):
         print(e)
         return HttpResponseBadRequest("Bad Request")
 
+def joinMatch(request):
+    try:
+        if request.method == "PUT":
+            print("joining match")
+            user_id, match_id = json.loads(request.body).values()
 
+            match = supabase.table('matches').select("*").eq('id', match_id).execute()
+            increment = match.data[0]['player_count'] + 1
+            new_match = supabase.table('matches').update({'player_count': increment}).eq('id', match_id).execute()
+
+            new_map = {
+                'profile_id': user_id,
+                'match_id': match_id
+            }
+
+            new_map = supabase.table('profile_match_mapping').insert(new_map).execute()
+        
+        return HttpResponse(status=200)
+    except Exception as e:
+        print(e)
+        return HttpResponseBadRequest("Bad Request")
 
 def detail(request, id):
     data = Movie.objects.get(pk=id)

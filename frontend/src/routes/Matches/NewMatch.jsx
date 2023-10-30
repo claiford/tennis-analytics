@@ -4,8 +4,6 @@ import { DateTime } from "luxon";
 
 import { createMatch } from '../../api';
 
-import supabase from '../../connnections';
-
 const formDefault = {
     title: '',
     venue: '',

@@ -2,7 +2,7 @@ import { DateTime } from "luxon";
 
 const MatchCard = ({ match }) => {
     return (
-        <div className="h-24 bg-white flex flex-col justify-center rounded-md p-5">
+        <div className="h-24 bg-white flex-auto flex flex-col justify-center rounded-l-md p-5">
             <div className="flex justify-between items-center">
                 <span>
                     {match.title}
@@ -19,9 +19,6 @@ const MatchCard = ({ match }) => {
                     <span>
                         {match.player_count} / {match.player_capacity}
                     </span>
-                    <button className="bg-green-300 rounded-md px-4">
-                        +
-                    </button>
                 </div>
             </div>
         </div>

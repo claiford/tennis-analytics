@@ -25,6 +25,8 @@ urlpatterns = [
     path('api/matches/open', views.openMatches),
     path('api/matches/', views.matches),
     path('api/matches/create', views.createMatch),
+    path('api/matches/join', views.joinMatch),
+    
     path('movies/<int:id>', views.detail),
     path('movies/<int:id>/delete', views.delete),
 
