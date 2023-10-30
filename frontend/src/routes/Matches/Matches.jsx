@@ -5,6 +5,7 @@ import { getOpenMatches, getMatches, joinMatch, leaveMatch } from '../../api';
 import * as Tabs from '@radix-ui/react-tabs';
 import { EnterIcon, ExitIcon, EyeOpenIcon, CircleBackslashIcon } from '@radix-ui/react-icons'
 
+import OpenMatches from './OpenMatches';
 import MatchCard from './MatchCard';
 import NewMatch from './NewMatch';
 
@@ -18,7 +19,7 @@ const Matches = () => {
     const fetchData = () => {
         getMatches()
             .then((res) => {
-                console.log(res)
+                console.log("FETCHING")
                 setMatches({
                     open: res.notMyMatches.filter((match) => match.status === 'open'),
                     joined: res.myMatches.filter((match) => match.status === 'open'),
@@ -29,37 +30,30 @@ const Matches = () => {
 
     const handleJoin = (match_id) => {
         joinMatch(match_id)
+        fetchData()
     }
 
     const handleLeave = (match_id) => {
         leaveMatch(match_id)
+        fetchData()
     }
 
     useEffect(() => {
         fetchData()
     }, [])
 
-    const openMatchCards = matches.open.map((match) => (
-        <div className="flex">
-            <MatchCard key={match.id} match={match} />
-            {match.player_count === match.player_capacity ? (
-                <button className="bg-gray-200 px-2 rounded-r-md" ><CircleBackslashIcon /></button>
-            ) : (
-                <button className="bg-green-200 px-2 rounded-r-md" onClick={() => handleJoin(match.id)}><EnterIcon /></button>
-            )}
-        </div>
-    ))
+    
 
     const joinedMatchCards = matches.joined.map((match) => (
-        <div className="flex">
-            <MatchCard key={match.id} match={match} />
+        <div key={match.id} className="flex">
+            <MatchCard match={match} />
             <button className="bg-red-200 px-2 rounded-r-md" onClick={() => handleLeave(match.id)}><ExitIcon /></button>
         </div>
     ))
 
     const completedMatchCards = matches.completed.map((match) => (
-        <div className="flex">
-            <MatchCard key={match.id} match={match} />
+        <div key={match.id} className="flex">
+            <MatchCard match={match} />
             <button className="bg-green-200 px-2 rounded-r-md"><EyeOpenIcon /></button>
         </div>
     ))
@@ -75,8 +69,8 @@ const Matches = () => {
                     <Tabs.Trigger className="TabTrigger text-sm rounded-md px-8" value="tab4">New</Tabs.Trigger>
                 </Tabs.List>
                 <div className="match-container flex-auto flex flex-col rounded-xl p-5">
-                    <Tabs.Content className="flex flex-col gap-3" value="tab1">
-                        {openMatchCards}
+                    <Tabs.Content value="tab1">
+                        <OpenMatches openMatches={matches.open} handleJoin={handleJoin}/>
                     </Tabs.Content>
                     <Tabs.Content className="flex flex-col gap-3" value="tab2">
                         {joinedMatchCards}

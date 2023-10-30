@@ -117,5 +117,14 @@ export async function joinMatch(match_id) {
 }
 
 export async function leaveMatch(match_id) {
-    console.log('leave')
+    try {
+        const { data: { user } } = await supabase.auth.getUser()
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/matches/leave`, {
+            user_id: user.id,
+            match_id: match_id
+        })
+        return response
+    } catch (e) {
+        throw e
+    }
 }
