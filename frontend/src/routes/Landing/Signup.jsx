@@ -19,7 +19,6 @@ const Signup = () => {
                 ...prevForm,
                 [e.target.name]: e.target.value,
             }
-            console.log(newForm.password)
             if (newForm.password.length > 0 && newForm.confirm.length > 0 && newForm.password !== newForm.confirm) {
                 setMatchError(true)
             } else {
