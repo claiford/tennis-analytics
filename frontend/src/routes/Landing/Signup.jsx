@@ -11,13 +11,20 @@ const Signup = () => {
         password: '',
         confirm: '',
     })
+    const [matchError, setMatchError] = useState(false)
 
     const handleChange = (e) => {
         setForm(prevForm => {
-            return {
+            const newForm = {
                 ...prevForm,
                 [e.target.name]: e.target.value,
             }
+            if (newForm.password.length > 0 && newForm.confirm.length > 0 && newForm.password !== newForm.confirm) {
+                setMatchError(true)
+            } else {
+                setMatchError(false)
+            }
+            return newForm
         })
     }
 
@@ -87,11 +94,11 @@ const Signup = () => {
                         <div className="flex justify-between items-baseline">
                             <Form.Label className="FormLabel">Confirm Password</Form.Label>
                             <Form.Message className="FormMessage" match="valueMissing">
-                                {form.password.length > 0 ? "Does not match" : "-"}
+                                {form.password.length === 0 ? "-" : ""}
                             </Form.Message>
-                            <Form.Message className="FormMessage" match={(value) => value !== form.password}>
+                            {matchError && <span className="FormMessage">
                                 Does not match
-                            </Form.Message>
+                            </span>}
                         </div>
                         <Form.Control asChild>
                             <input className="Input" type="password" required value={form.confirm} onChange={(e) => handleChange(e)} />
@@ -99,7 +106,7 @@ const Signup = () => {
                     </Form.Field>
                 </div>
                 <Form.Submit className="landing-btn mt-5">
-                        Signup
+                    Signup
                 </Form.Submit>
             </Form.Root >
         </div >

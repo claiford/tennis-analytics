@@ -7,8 +7,10 @@ const Login = () => {
         email: '',
         password: '',
     })
+    const [loginError, setLoginError] = useState(null)
 
     const handleChange = (e) => {
+        setLoginError(null)
         setForm(prevForm => {
             return {
                 ...prevForm,
@@ -19,7 +21,10 @@ const Login = () => {
 
     const handleLogin = (e) => {
         e.preventDefault()
-        signInWithEmail(form)
+        signInWithEmail(form).then((res) => {
+            console.log("RES", res)
+            setLoginError(res);
+        })
     }
 
     return (
@@ -34,6 +39,9 @@ const Login = () => {
                         <Form.Message className="FormMessage" match="typeMismatch">
                             Please provide a valid email
                         </Form.Message>
+                        {loginError && <span className="FormMessage">
+                            Wrong email or password
+                        </span>}
                     </div>
                     <Form.Control asChild>
                         <input className="Input" type="email" required value={form.email} onChange={(e) => handleChange(e)} />
@@ -46,6 +54,9 @@ const Login = () => {
                         <Form.Message className="FormMessage" match="valueMissing">
                             Password is required
                         </Form.Message>
+                        {loginError && <span className="FormMessage">
+                            Wrong email or password
+                        </span>}
                     </div>
                     <Form.Control asChild>
                         <input className="Input" type="password" required value={form.password} onChange={(e) => handleChange(e)} />

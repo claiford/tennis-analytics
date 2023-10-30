@@ -10,7 +10,6 @@ export async function signUpNewUser(formData) {
             email: formData.email,
             password: formData.password,
         })
-
         await supabase
             .from('profiles')
             .update({ first_name: formData.firstname, last_name: formData.lastname })
@@ -22,10 +21,15 @@ export async function signUpNewUser(formData) {
 }
 
 export async function signInWithEmail(formData) {
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
-    })
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: formData.email,
+            password: formData.password,
+        }) 
+        if (error) throw error
+    } catch (e) {
+        return e
+    }
 }
 
 export async function signOut() {
