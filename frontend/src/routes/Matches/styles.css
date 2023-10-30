@@ -8,8 +8,55 @@
         background-color: #283149;
         color: white;
     }
-    
+
     .match-container {
         background-color: #404b69;
+    }
+
+    .landing-btn {
+        min-width: 80px;
+        min-height: 40px;
+        border-radius: 10px;
+        padding: 0 10px;
+        background-color: white;
+    }
+
+    .landing-btn:hover {
+        cursor: pointer;
+        background-color: var(--white-a9);
+    }
+
+    .landing-btn:active {
+        color: white;
+        background-color: var(--black-a3);
+    }
+
+    .FormField {
+        display: grid;
+        margin-bottom: 10px;
+    }
+
+    .FormLabel {
+        font-size: 15px;
+        line-height: 35px;
+        color: white;
+    }
+
+    .FormMessage {
+        font-size: 13px;
+        color: lightpink;
+        opacity: 0.8;
+    }
+
+    .Input {
+        height: 35px;
+        border-radius: 10px;
+        color: white;
+        background-color: var(--black-a5);
+        padding: 0 10px;
+    }
+
+    .Input:hover {
+        box-shadow: 0 0 2px 2px white;
     }
 }

@@ -2,6 +2,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, HttpRe
 from django.shortcuts import render
 from .models import Movie
 
+from datetime import datetime
 import os
 import json
 from supabase import create_client, Client
@@ -30,6 +31,26 @@ def matches(request):
     except Exception as e:
         print(e)
         return HttpResponseBadRequest("Bad Request")
+
+def createMatch(request):
+    try:
+        if request.method == "POST":
+            body = json.loads(request.body)
+            new_match = supabase.table('matches').insert(body['data']).execute()
+
+            new_map = {
+                'profile_id': body['user_id'],
+                'match_id': new_match.data[0]['id']
+            }
+
+            new_map = supabase.table('profile_match_mapping').insert(new_map).execute()
+        
+        return HttpResponse(status=200)
+    except Exception as e:
+        print(e)
+        return HttpResponseBadRequest("Bad Request")
+
+
 
 def detail(request, id):
     data = Movie.objects.get(pk=id)

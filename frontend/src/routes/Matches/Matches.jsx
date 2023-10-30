@@ -5,11 +5,12 @@ import { getOpenMatches, getMyMatches } from '../../api';
 import * as Tabs from '@radix-ui/react-tabs';
 
 import MatchCard from './MatchCard';
+import NewMatch from './NewMatch';
 
 const Matches = () => {
     const [matches, setMatches] = useState({
         open: [],
-        confirmed: [],
+        joined: [],
         completed: [],
     })
 
@@ -33,6 +34,7 @@ const Matches = () => {
                     <Tabs.Trigger className="TabTrigger text-sm rounded-md px-8" value="tab1">Open</Tabs.Trigger>
                     <Tabs.Trigger className="TabTrigger text-sm rounded-md px-8" value="tab2">Joined</Tabs.Trigger>
                     <Tabs.Trigger className="TabTrigger text-sm rounded-md px-8" value="tab3">History</Tabs.Trigger>
+                    <Tabs.Trigger className="TabTrigger text-sm rounded-md px-8" value="tab4">New</Tabs.Trigger>
                 </Tabs.List>
                 <div className="match-container flex-auto flex flex-col gap-5 rounded-xl p-5">
                     <Tabs.Content value="tab1">
@@ -44,16 +46,11 @@ const Matches = () => {
                     <Tabs.Content value="tab3">
                         Tab three content
                     </Tabs.Content>
+                    <Tabs.Content value="tab4">
+                        <NewMatch />
+                    </Tabs.Content>
                 </div>
             </Tabs.Root>
-
-
-            {/* <div className='match-container w-1/2 bg-white rounded-xl'>
-                <MatchCard />
-            </div>
-            <div className='match-container w-1/2 bg-white rounded-xl'>
-                History
-            </div> */}
         </div>
     )
 };

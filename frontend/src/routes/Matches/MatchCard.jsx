@@ -1,8 +1,6 @@
 import { DateTime } from "luxon";
 
 const MatchCard = ({ match }) => {
-    console.log(match)
-
     return (
         <div className="h-24 bg-white flex flex-col justify-center rounded-md p-5">
             <div className="flex justify-between items-center">

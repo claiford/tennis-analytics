@@ -24,8 +24,8 @@ urlpatterns = [
 
     path('api/matches/open', views.openMatches),
     path('api/matches/', views.matches),
+    path('api/matches/create', views.createMatch),
     path('movies/<int:id>', views.detail),
-    path('movies/add', views.add),
     path('movies/<int:id>/delete', views.delete),
 
 ]

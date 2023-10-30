@@ -62,11 +62,25 @@ export async function getOpenMatches() {
         console.log(e)
     }
 }
+
 export async function getMyMatches() {
     try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/matches`)
         return response.data
     } catch (e) {
         console.log(e)
+    }
+}
+
+export async function createMatch(formData) {
+    try {
+        const { data: { user } } = await supabase.auth.getUser()
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/matches/create`, {
+            user_id: user.id,
+            data: formData
+        })
+        return response
+    } catch (e) {
+        throw e
     }
 }
