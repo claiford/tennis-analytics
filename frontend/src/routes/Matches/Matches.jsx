@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import './styles.css';
-import { getOpenMatches, getMatches, joinMatch, leaveMatch } from '../../api';
+import { getOpenMatches, getMatches, joinMatch, leaveMatch, completeMatch } from '../../api';
 
 import * as Tabs from '@radix-ui/react-tabs';
-import { EnterIcon, ExitIcon, EyeOpenIcon, CircleBackslashIcon } from '@radix-ui/react-icons'
+import { EnterIcon, ExitIcon, EyeOpenIcon, CircleBackslashIcon, CheckCircledIcon } from '@radix-ui/react-icons'
 
 import OpenMatches from './OpenMatches';
 import MatchCard from './MatchCard';
@@ -19,7 +19,7 @@ const Matches = () => {
     const fetchData = () => {
         getMatches()
             .then((res) => {
-                console.log("FETCHING")
+                console.log("FETCHING MATCHES")
                 setMatches({
                     open: res.notMyMatches.filter((match) => match.status === 'open'),
                     joined: res.myMatches.filter((match) => match.status === 'open'),
@@ -38,6 +38,11 @@ const Matches = () => {
         fetchData()
     }
 
+    const handleComplete = (match_id) => {
+        completeMatch(match_id)
+        fetchData()
+    }
+
     useEffect(() => {
         fetchData()
     }, [])
@@ -47,14 +52,17 @@ const Matches = () => {
     const joinedMatchCards = matches.joined.map((match) => (
         <div key={match.id} className="flex">
             <MatchCard match={match} />
-            <button className="bg-red-200 px-2 rounded-r-md" onClick={() => handleLeave(match.id)}><ExitIcon /></button>
+            <div className="flex flex-col">
+                <button className="flex-auto bg-red-200 px-2 rounded-tr-md" onClick={() => handleLeave(match.id)}><ExitIcon /></button>
+                <button className=" flex-auto bg-blue-200 px-2 rounded-br-md" onClick={() => handleComplete(match.id)}><CheckCircledIcon /></button>
+            </div>
         </div>
     ))
 
     const completedMatchCards = matches.completed.map((match) => (
         <div key={match.id} className="flex">
             <MatchCard match={match} />
-            <button className="bg-green-200 px-2 rounded-r-md"><EyeOpenIcon /></button>
+            <button className="bg-violet-200 px-2 rounded-r-md"><EyeOpenIcon /></button>
         </div>
     ))
 

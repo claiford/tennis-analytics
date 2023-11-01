@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { signOut } from "../../api";
 
 const pathIcons = {
@@ -6,9 +6,9 @@ const pathIcons = {
 }
 
 const Utilities = () => {
+    const navigate = useNavigate();
     const location = useLocation();
-    const path = location.pathname.split("/")
-    console.log(path)
+    const path = location.pathname.split("/");
 
     let pathString = ''
     for (const page of path) {
@@ -19,6 +19,8 @@ const Utilities = () => {
 
     const handleLogout = () => {
         signOut()
+        console.log("SIGNED OUT")
+        navigate("/login")
     }
 
     return (

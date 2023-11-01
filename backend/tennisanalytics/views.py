@@ -48,7 +48,7 @@ def createMatch(request):
                 'match_id': new_match.data[0]['id']
             }
 
-            new_map = supabase.table('profile_match_mapping').insert(new_map).execute()
+            creted_map = supabase.table('profile_match_mapping').insert(new_map).execute()
         
         return HttpResponse(status=200)
     except Exception as e:
@@ -62,14 +62,14 @@ def joinMatch(request):
 
             match = supabase.table('matches').select("*").eq('id', match_id).execute()
             increment = match.data[0]['player_count'] + 1
-            new_match = supabase.table('matches').update({'player_count': increment}).eq('id', match_id).execute()
+            updated_match = supabase.table('matches').update({'player_count': increment}).eq('id', match_id).execute()
 
             new_map = {
                 'profile_id': user_id,
                 'match_id': match_id
             }
 
-            new_map = supabase.table('profile_match_mapping').insert(new_map).execute()
+            created_map = supabase.table('profile_match_mapping').insert(new_map).execute()
         
         return HttpResponse(status=200)
     except Exception as e:
@@ -83,9 +83,21 @@ def leaveMatch(request):
 
             match = supabase.table('matches').select("*").eq('id', match_id).execute()
             increment = match.data[0]['player_count'] - 1
-            new_match = supabase.table('matches').update({'player_count': increment}).eq('id', match_id).execute()
+            updated_match = supabase.table('matches').update({'player_count': increment}).eq('id', match_id).execute()
 
-            delete_map = supabase.table('profile_match_mapping').delete().eq('profile_id', user_id).eq('match_id', match_id).execute()
+            deleted_map = supabase.table('profile_match_mapping').delete().eq('profile_id', user_id).eq('match_id', match_id).execute()
+        
+        return HttpResponse(status=200)
+    except Exception as e:
+        print(e)
+        return HttpResponseBadRequest("Bad Request")
+
+def completeMatch(request):
+    try:
+        if request.method == "PUT":
+            user_id, match_id = json.loads(request.body).values()
+
+            new_match = supabase.table('matches').update({'status': 'completed'}).eq('id', match_id).execute()
         
         return HttpResponse(status=200)
     except Exception as e:

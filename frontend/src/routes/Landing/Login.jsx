@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import * as Form from '@radix-ui/react-form';
 import { signInWithEmail } from '../../api';
 
@@ -8,6 +9,8 @@ const Login = () => {
         password: '',
     })
     const [loginError, setLoginError] = useState(null)
+
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         setLoginError(null)
@@ -22,8 +25,12 @@ const Login = () => {
     const handleLogin = (e) => {
         e.preventDefault()
         signInWithEmail(form).then((res) => {
-            console.log("RES", res)
-            setLoginError(res);
+            if (res === 'bearer') {
+                console.log("SIGNED IN")
+                navigate('/dashboard')
+            } else {
+                setLoginError(res);
+            }
         })
     }
 

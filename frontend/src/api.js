@@ -36,6 +36,7 @@ export async function signInWithEmail(formData) {
             password: formData.password,
         })
         if (error) throw error
+        return data.session.token_type
     } catch (e) {
         return e
     }
@@ -120,6 +121,19 @@ export async function leaveMatch(match_id) {
     try {
         const { data: { user } } = await supabase.auth.getUser()
         const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/matches/leave`, {
+            user_id: user.id,
+            match_id: match_id
+        })
+        return response
+    } catch (e) {
+        throw e
+    }
+}
+
+export async function completeMatch(match_id) {
+    try {
+        const { data: { user } } = await supabase.auth.getUser()
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/matches/complete`, {
             user_id: user.id,
             match_id: match_id
         })
