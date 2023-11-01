@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import './styles.css';
-import { getOpenMatches, getMatches, joinMatch, leaveMatch, completeMatch } from '../../api';
+import { getMatches, joinMatch, leaveMatch, completeMatch } from '../../api';
 
 import * as Tabs from '@radix-ui/react-tabs';
-import { EnterIcon, ExitIcon, EyeOpenIcon, CircleBackslashIcon, CheckCircledIcon } from '@radix-ui/react-icons'
+import { ExitIcon, EyeOpenIcon, CheckCircledIcon } from '@radix-ui/react-icons'
 
 import OpenMatches from './OpenMatches';
 import MatchCard from './MatchCard';
@@ -19,7 +19,6 @@ const Matches = () => {
     const fetchData = () => {
         getMatches()
             .then((res) => {
-                console.log("FETCHING MATCHES")
                 setMatches({
                     open: res.notMyMatches.filter((match) => match.status === 'open'),
                     joined: res.myMatches.filter((match) => match.status === 'open'),
@@ -46,8 +45,6 @@ const Matches = () => {
     useEffect(() => {
         fetchData()
     }, [])
-
-    
 
     const joinedMatchCards = matches.joined.map((match) => (
         <div key={match.id} className="flex">
@@ -83,7 +80,7 @@ const Matches = () => {
                     <Tabs.Content className="flex flex-col gap-3" value="tab2">
                         {joinedMatchCards}
                     </Tabs.Content>
-                    <Tabs.Content value="tab3">
+                    <Tabs.Content className="flex flex-col gap-3" value="tab3">
                         {completedMatchCards}
                     </Tabs.Content>
                     <Tabs.Content value="tab4">

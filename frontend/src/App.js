@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import './App.css'
 
 import Landing from './routes/Landing/Landing';
 import Home from './routes/Home/Home';
@@ -15,7 +16,6 @@ function App() {
   const [session, setSession] = useState(null)
 
   useEffect(() => {
-    console.log("using effect")
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
     })
@@ -31,7 +31,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="App bg-gray-800 h-screen font-raleway font-semibold">
+      <div className="App h-screen font-raleway font-semibold">
         <Routes>
           <Route path='/login' element={session ? <Navigate to="/dashboard" /> : <Landing />}></Route>
           <Route path='/' element={session ? <Home /> : <Navigate to="/login" />}>

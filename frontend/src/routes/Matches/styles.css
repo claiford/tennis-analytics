@@ -59,4 +59,8 @@
     .Input:hover {
         box-shadow: 0 0 2px 2px white;
     }
+
+    .SeparatorRoot {
+        background-color: var(--black-a5);
+    }
 }
