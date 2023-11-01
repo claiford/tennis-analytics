@@ -21,8 +21,15 @@ from tennisanalytics import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home),
-    path('movies/', views.movies),
+
+    path('api/matches/open', views.openMatches),
+    path('api/matches/', views.matches),
+    path('api/matches/create', views.createMatch),
+    path('api/matches/join', views.joinMatch),
+    path('api/matches/leave', views.leaveMatch),
+    path('api/matches/complete', views.completeMatch),
+
     path('movies/<int:id>', views.detail),
-    path('movies/add', views.add),
     path('movies/<int:id>/delete', views.delete),
+
 ]
