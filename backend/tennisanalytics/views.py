@@ -16,10 +16,15 @@ supabase = create_client(url, key)
 def home(request):
     return JsonResponse({'test': "HOME"})
 
-def openMatches(request):
+def completedMatches(request):
     try:
-        response = supabase.table('matches').select("*").eq('status', 'open').execute()
-        return JsonResponse(response.data, safe=False)
+        print("GETTING COMPLTED MATCHES")
+        matches = supabase.table('matches').select("*").eq('status', 'completed').execute()
+        mappings = supabase.table('profile_match_mapping').select("*").execute()
+        return JsonResponse({
+            'matches': matches.data,
+            'mapping': mappings.data
+        }, safe=False)
     except Exception as e:
         print(e)
         return HttpResponseBadRequest("Bad Request")
@@ -98,6 +103,43 @@ def completeMatch(request):
             user_id, match_id = json.loads(request.body).values()
 
             new_match = supabase.table('matches').update({'status': 'completed'}).eq('id', match_id).execute()
+        
+        return HttpResponse(status=200)
+    except Exception as e:
+        print(e)
+        return HttpResponseBadRequest("Bad Request")
+
+def diagnostics(request):
+    try:
+        diagnostics = supabase.table('diagnostics').select("*").execute()
+        
+        return JsonResponse({'diagnostics': diagnostics.data}, safe=False)
+    except Exception as e:
+        print(e)
+        return HttpResponseBadRequest("Bad Request")
+
+def createDiagnostic(request):
+    try:
+        if request.method == "POST":
+            # body = json.dumps(request.POST)
+            print("FILE", request.FILES['video'].temporary_file_path())
+            filepath = request.FILES['video'].temporary_file_path()
+            supabase_raw = f"raw/{request.FILES['video'].name}"
+
+            try:
+                with open(filepath, 'rb') as f:
+                    supabase.storage.from_("videos").upload(file=f,path=supabase_raw, file_options={"content-type": "video/mp4"})
+            except Exception as e:
+                if e.args[0]['error'] != 'Duplicate':
+                    raise e
+            # new_match = supabase.table('matches').insert(body['data']).execute()
+
+            # new_map = {
+            #     'profile_id': body['user_id'],
+            #     'match_id': new_match.data[0]['id']
+            # }
+
+            # creted_map = supabase.table('profile_match_mapping').insert(new_map).execute()
         
         return HttpResponse(status=200)
     except Exception as e:

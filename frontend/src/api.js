@@ -55,10 +55,20 @@ export async function signOut() {
 // 888   "   888  d8888888888     888    Y88b  d88P 888    888 888       Y88b  d88P 
 // 888       888 d88P     888     888     "Y8888P"  888    888 8888888888 "Y8888P"  
 
-export async function getOpenMatches() {
+export async function getCompletedMatches() {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/matches/open`)
-        return response.data
+        const { data: { user } } = await supabase.auth.getUser()
+
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/matches/completed`)
+        const completedMatches = response.data.matches
+        const mapping = response.data.mapping
+
+        const myCompletedMatches = []
+        for (const row of mapping.filter((row) => row.profile_id === user.id)) {
+            myCompletedMatches.push(completedMatches.find((match) => match.id === row.match_id));
+        }
+
+        return myCompletedMatches
     } catch (e) {
         console.log(e)
     }
@@ -138,6 +148,45 @@ export async function completeMatch(match_id) {
             match_id: match_id
         })
         return response
+    } catch (e) {
+        throw e
+    }
+}
+
+export async function getDiagnostics(match_id) {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/diagnostics`)
+        return response.data.diagnostics
+    } catch (e) {
+        throw e
+    }
+}
+
+export async function addDiagnostic(match_id, formData) {
+    try {
+        const { data: { user } } = await supabase.auth.getUser()
+
+        const data = {
+            user_id: user.id,
+            match_id: match_id,
+            title: formData.title,
+            position: formData.position,
+            video: formData.video
+        }
+
+        console.log("IN API", data)
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/diagnostics/create`, {
+            user_id: user.id,
+            match_id: match_id,
+            title: formData.title,
+            position: formData.position,
+            video: formData.video
+        }, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        })
+        return response.data.diagnostics
     } catch (e) {
         throw e
     }

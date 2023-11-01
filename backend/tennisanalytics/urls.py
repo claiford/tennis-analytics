@@ -22,12 +22,16 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home),
 
-    path('api/matches/open', views.openMatches),
     path('api/matches/', views.matches),
     path('api/matches/create', views.createMatch),
     path('api/matches/join', views.joinMatch),
     path('api/matches/leave', views.leaveMatch),
     path('api/matches/complete', views.completeMatch),
+
+    path('api/matches/completed', views.completedMatches),
+    
+    path('api/diagnostics', views.diagnostics),
+    path('api/diagnostics/create', views.createDiagnostic),
 
     path('movies/<int:id>', views.detail),
     path('movies/<int:id>/delete', views.delete),
