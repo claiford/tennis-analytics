@@ -124,6 +124,23 @@ def diagnostics(request):
 def createDiagnostic(request):
     try:
         if request.method == "POST":
+            video = request.FILES['video']
+
+            position = request.POST['position']
+            source_path = video.temporary_file_path()
+            # target_path = '/tmp/target.mp4'
+
+            ## upload raw video
+            supabase_raw = f"raw/{video.name}"
+            try:
+                with open(source_path, 'rb') as f:
+                    supabase.storage.from_("videos").upload(file=f,path=supabase_raw, file_options={"content-type": "video/mp4"})
+            except Exception as e:
+                print("ERROR HERE", e)
+                if e.args[0]['error'] != 'Duplicate': raise e
+            finally:
+                raw_url = supabase.storage.from_('videos').get_public_url(supabase_raw)
+
             # create empty diagnostic
             new_diagnostic = {
                 'status': 'loading',
@@ -134,26 +151,11 @@ def createDiagnostic(request):
             created_diagnostic = supabase.table('diagnostics').insert(new_diagnostic).execute()
             new_diagnostic_id = created_diagnostic.data[0]['id']
 
-            video = request.FILES['video']
-
-            position = request.POST['position']
-            source_path = video.temporary_file_path()
-            # target_path = '/tmp/target.mp4'
-
+            # create temp file and start processing
             with NamedTemporaryFile(mode='w+b', suffix='.mp4') as target_file:
                 target_path = target_file.name
 
                 json, video_info = process_video(position, source_path, target_path)
-
-                ## upload raw video
-                supabase_raw = f"raw/{video.name}"
-                try:
-                    with open(source_path, 'rb') as f:
-                        supabase.storage.from_("videos").upload(file=f,path=supabase_raw, file_options={"content-type": "video/mp4"})
-                except Exception as e:
-                    if e.args[0]['error'] != 'Duplicate': raise e
-                finally:
-                    raw_url = supabase.storage.from_('videos').get_public_url(supabase_raw)
 
                 ## upload processed video
                 # now = datetime.now()

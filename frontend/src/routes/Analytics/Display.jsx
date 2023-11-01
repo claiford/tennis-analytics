@@ -45,7 +45,7 @@ const Display = ({ selectedMatch }) => {
     return (
         <div className="w-full h-full flex">
             <div className="w-1/4 h-full flex flex-col items-center gap-2 p-2">
-                <h1>select diagnostic</h1>
+                <p>select diagnostic</p>
                 <Separator.Root className="SeparatorRoot h-0.5 w-1/2" orientation="horizontal" />
                 <div className="flex flex-col items-center gap-4 m-2">
                     <form>

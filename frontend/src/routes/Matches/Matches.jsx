@@ -46,8 +46,6 @@ const Matches = () => {
         fetchData()
     }, [])
 
-    
-
     const joinedMatchCards = matches.joined.map((match) => (
         <div key={match.id} className="flex">
             <MatchCard match={match} />
@@ -82,7 +80,7 @@ const Matches = () => {
                     <Tabs.Content className="flex flex-col gap-3" value="tab2">
                         {joinedMatchCards}
                     </Tabs.Content>
-                    <Tabs.Content value="tab3">
+                    <Tabs.Content className="flex flex-col gap-3" value="tab3">
                         {completedMatchCards}
                     </Tabs.Content>
                     <Tabs.Content value="tab4">

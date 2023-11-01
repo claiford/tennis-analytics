@@ -5,7 +5,7 @@ import Utilities from "./Utilities";
 const Home = () => {
     return (
         <div className='flex flex-row h-full'>
-            <aside className='flex flex-col w-1/5 h-full bg-gray-900'>
+            <aside className='flex flex-col w-1/5 h-full'>
                 <h1 className='text-3xl font-bold py-10 text-white'>Logo</h1>
                 <SidebarNav />
             </aside>

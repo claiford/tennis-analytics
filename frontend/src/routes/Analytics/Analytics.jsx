@@ -53,9 +53,9 @@ const Analytics = () => {
                 <Toolbar.Separator className="ToolbarSeparator" />
 
                 {selectedMatch ? (
-                    <h1 className="">{selectedMatch?.title}</h1>
+                    <p className="">{selectedMatch?.title}</p>
                 ) : (
-                    <h1 className="">select a match</h1>
+                    <p className="">select a match</p>
                 )}
 
                 {/* <Toolbar.ToggleGroup type="single" defaultValue="center" aria-label="Text alignment">
