@@ -49,25 +49,16 @@ const Analytics = () => {
                     </Dialog.Trigger>
                     <MatchSelect completedMatches={completedMatches} selectedMatch={selectedMatch} handleSelectMatch={handleSelectMatch} />
                 </Dialog.Root>
-                <Toolbar.ToggleGroup type="multiple" aria-label="Text formatting">
-                    <Toolbar.ToggleItem className="ToolbarToggleItem" value="bold" aria-label="Bold">
-                        <FontBoldIcon />
-                    </Toolbar.ToggleItem>
-                    <Toolbar.ToggleItem className="ToolbarToggleItem" value="italic" aria-label="Italic">
-                        <FontItalicIcon />
-                    </Toolbar.ToggleItem>
-                    <Toolbar.ToggleItem
-                        className="ToolbarToggleItem"
-                        value="strikethrough"
-                        aria-label="Strike through"
-                    >
-                        <StrikethroughIcon />
-                    </Toolbar.ToggleItem>
-                </Toolbar.ToggleGroup>
 
                 <Toolbar.Separator className="ToolbarSeparator" />
 
-                <Toolbar.ToggleGroup type="single" defaultValue="center" aria-label="Text alignment">
+                {selectedMatch ? (
+                    <h1 className="">{selectedMatch?.title}</h1>
+                ) : (
+                    <h1 className="">select a match</h1>
+                )}
+
+                {/* <Toolbar.ToggleGroup type="single" defaultValue="center" aria-label="Text alignment">
                     <Toolbar.ToggleItem className="ToolbarToggleItem" value="left" aria-label="Left aligned">
                         <TextAlignLeftIcon />
                     </Toolbar.ToggleItem>
@@ -79,18 +70,16 @@ const Analytics = () => {
                     </Toolbar.ToggleItem>
                 </Toolbar.ToggleGroup>
 
-                <Toolbar.Separator className="ToolbarSeparator" />
+                <Toolbar.Separator className="ToolbarSeparator" /> */}
 
                 <Toolbar.Button className="ToolbarButton" style={{ marginLeft: 'auto' }}>
                     Share
                 </Toolbar.Button>
             </Toolbar.Root>
 
-            {selectedMatch ? (
+            {selectedMatch && 
                 <Display selectedMatch={selectedMatch} />
-            ) : (
-                <h1>nothing selected</h1>
-            )}
+            }
         </div>
     )
 };

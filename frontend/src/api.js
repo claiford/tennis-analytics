@@ -65,7 +65,10 @@ export async function getCompletedMatches() {
 
         const myCompletedMatches = []
         for (const row of mapping.filter((row) => row.profile_id === user.id)) {
-            myCompletedMatches.push(completedMatches.find((match) => match.id === row.match_id));
+            const match = completedMatches.find((match) => match.id === row.match_id)
+            if (match) {
+                myCompletedMatches.push(match)
+            }
         }
 
         return myCompletedMatches
@@ -156,7 +159,8 @@ export async function completeMatch(match_id) {
 export async function getDiagnostics(match_id) {
     try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/diagnostics`)
-        return response.data.diagnostics
+        const diagnostics = response.data.diagnostics.filter((diagnostic) => diagnostic.match_id === match_id)
+        return diagnostics
     } catch (e) {
         throw e
     }
@@ -174,7 +178,6 @@ export async function addDiagnostic(match_id, formData) {
             video: formData.video
         }
 
-        console.log("IN API", data)
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/diagnostics/create`, {
             user_id: user.id,
             match_id: match_id,

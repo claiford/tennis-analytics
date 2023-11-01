@@ -11,7 +11,7 @@
 		min-width: max-content;
 		border-radius: 6px;
 		background-color: white;
-		box-shadow: 0 2px 10px var(--black-a7);
+		/* box-shadow: 0 2px 10px var(--black-a7); */
 	}
 
 	.ToolbarToggleItem,
@@ -93,6 +93,10 @@
 		cursor: pointer;
 		background-color: var(--violet-10);
 		color: white;
+	}
+
+	.SeparatorRoot {
+		background-color: var(--violet-5);
 	}
 }
 

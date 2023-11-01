@@ -15,7 +15,6 @@ const NewDiagnostic = ({ handleAdd }) => {
 
     const handleChange = (e) => {
         setForm(prevForm => {
-            console.log(e.target.name)
             return {
                 ...prevForm,
                 [e.target.name]: e.target.value,
