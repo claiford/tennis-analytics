@@ -271,20 +271,34 @@ def process_video(position, source_path, target_path):
   generator = get_video_frames_generator(source_path)
   
   player_positions = []
-  with VideoSink(target_path, video_info) as sink:
-      for frame in tqdm(generator, total=video_info.total_frames):
-          res_frame, player_positions_transformed = process_frame(frame, video_info)
 
-          if player_positions_transformed is not None:
-            if position == "front":
-              player_positions.append(player_positions_transformed[0])
-            elif position == "back":
-              player_positions.append(player_positions_transformed[1])
-          else:
-            player_positions.append([None, None])
+  print((video_info.width, video_info.height))
 
-          sink.write_frame(res_frame)
+  result = cv2.VideoWriter(target_path,  
+                         cv2.VideoWriter_fourcc(*'mp4v'), 
+                         video_info.fps,
+                         (video_info.width, video_info.height)
+                         ) 
   
+  # with VideoSink(target_path, video_info) as sink:
+  for frame in tqdm(generator, total=video_info.total_frames):
+      res_frame, player_positions_transformed = process_frame(frame, video_info)
+
+      if player_positions_transformed is not None:
+        if position == "front":
+          player_positions.append(player_positions_transformed[0])
+        elif position == "back":
+          player_positions.append(player_positions_transformed[1])
+      else:
+        player_positions.append([None, None])
+
+      result.write(res_frame) 
+          # sink.write_frame(res_frame)
+      # break
+  
+  result.release()
+  cv2.destroyAllWindows()
+
   df = pd.DataFrame(
     data=player_positions,
     columns=['x', 'y']

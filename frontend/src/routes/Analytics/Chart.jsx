@@ -12,13 +12,15 @@ const Chart = ({ selectedDiagnostic }) => {
 			for (let y = 1; y <= 40; y++)
 				gridObject[`${x},${y}`] = 0
 		}
-		// console.log(gridObject)
 		const xy_values = JSON.parse(selectedDiagnostic.xy)
-		// console.log(typeof(xy_values[0]['x']))
-		// console.log(Object.values(xy_values))
 		for (const xy of Object.values(xy_values)) {
 			const x_round = Math.ceil(xy['x'] / 100)
 			const y_round = Math.ceil(xy['y'] / 100)
+			if (selectedDiagnostic.position === "front" && y_round < Math.ceil(1988 / 100)) {
+				continue
+			} else if (selectedDiagnostic.position === "back" && y_round > Math.ceil(1988 / 100)) {
+				continue
+			}
 			if (gridObject[`${x_round},${y_round}`] >= 0) {
 				gridObject[`${x_round},${y_round}`] += 1
 			}
@@ -48,49 +50,17 @@ const Chart = ({ selectedDiagnostic }) => {
 		return commitsPerDate
 	}
 
-	function getWeekOfYear(date) {
-		var target = new Date(date.valueOf()),
-			dayNumber = (date.getDay() + 6) % 7,
-			firstThursday;
-
-		target.setDate(target.getDate() - dayNumber + 3);
-		firstThursday = target.valueOf();
-		target.setMonth(0, 1);
-
-		if (target.getDay() !== 4) {
-			target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
-		}
-
-		return Math.ceil((firstThursday - target) / (7 * 24 * 3600 * 1000)) + 1;
-	}
-
 	useEffect(() => {
 		const gridObject = generateData()
 
-		const myValues = []
+		const values = []
 		for (const grid of Object.entries(gridObject)) {
-			myValues.push({
+			values.push({
 				x: grid[0].split(",")[0],
 				y: grid[0].split(",")[1],
 				data: grid[1]
 			})
 		}
-		console.log(myValues)
-
-		const commitsData = generateFakeCommitData();
-		var values = []
-
-		commitsData.forEach(datum => {
-			var date = new Date(datum.date)
-			//    console.log (datum.date + " " + date.getDay() + " " + getWeekOfYear(date) + ":" + datum.count)
-			values.push({
-				day: date.getDay(),
-				week: getWeekOfYear(date),
-				type: datum.count
-			})
-		});
-
-		// console.log(values)
 
 		// first, initialize the variables that are independent of the data
 		const cols = 27
@@ -156,7 +126,7 @@ const Chart = ({ selectedDiagnostic }) => {
 
 
 		var heatMap = svg.selectAll(".grid") // make heatMap with data, data can be a hard coded array or an array of objects brought in through another file
-			.data(myValues) // play with this, but later change this it to the data that is passed in on line 24
+			.data(values) // play with this, but later change this it to the data that is passed in on line 24
 			.enter()
 			.append("rect")
 			.attr("width", gridSize)

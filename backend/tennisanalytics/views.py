@@ -8,6 +8,7 @@ import os
 import json
 from supabase import create_client, Client
 from dotenv import load_dotenv
+import cv2
 
 from .upstream import process_video
 
@@ -19,9 +20,16 @@ supabase = create_client(url, key)
 def home(request):
     return JsonResponse({'test': "HOME"})
 
+def user(requst):
+    try:
+        profiles = supabase.table('profiles').select("*").execute()
+        return JsonResponse({'profiles': profiles.data}, safe=False)
+    except Exception as e:
+        print(e)
+        return HttpResponseBadRequest("Bad Request")
+
 def completedMatches(request):
     try:
-        print("GETTING COMPLTED MATCHES")
         matches = supabase.table('matches').select("*").eq('status', 'completed').execute()
         mappings = supabase.table('profile_match_mapping').select("*").execute()
         return JsonResponse({
@@ -128,13 +136,17 @@ def createDiagnostic(request):
 
             position = request.POST['position']
             source_path = video.temporary_file_path()
-            # target_path = '/tmp/target.mp4'
 
-            ## upload raw video
+            cap = cv2.VideoCapture(source_path)
+            # print("FOURCC", cap.get(cv2.CAP_PROP_FOURCC))
+            
+            target_path = os.path.join(os.getcwd(), 'result.mp4')
+
+            # upload raw video
             supabase_raw = f"raw/{video.name}"
             try:
                 with open(source_path, 'rb') as f:
-                    supabase.storage.from_("videos").upload(file=f,path=supabase_raw, file_options={"content-type": "video/mp4"})
+                    supabase.storage.from_("videos").upload(file=f,path=supabase_raw, file_options={"content-type": "video/h264"})
             except Exception as e:
                 print("ERROR HERE", e)
                 if e.args[0]['error'] != 'Duplicate': raise e
@@ -152,39 +164,40 @@ def createDiagnostic(request):
             new_diagnostic_id = created_diagnostic.data[0]['id']
 
             # create temp file and start processing
-            with NamedTemporaryFile(mode='w+b', suffix='.mp4') as target_file:
-                target_path = target_file.name
+            # with NamedTemporaryFile(mode='w+b', suffix='.mp4') as target_file:
+                # target_path = target_file.name
+            print("TARGET PATH", target_path)
 
-                json, video_info = process_video(position, source_path, target_path)
+            json, video_info = process_video(position, source_path, target_path)
 
-                ## upload processed video
-                # now = datetime.now()
-                # date_time = now.strftime("%m-%d-%Y_%H-%M-%S")
-                # supabase_processed = f"processed/{date_time}_{video.name}"
-                
-                # try:
-                #     with open(target_path, 'rb') as f:
-                #         supabase.storage.from_("videos").upload(file=f,path=supabase_processed, file_options={"content-type": "video/mp4"})
-                # except Exception as e:
-                #     if e.args[0]['error'] != 'Duplicate': raise e
-                # finally:
-                #     processed_url = supabase.storage.from_('videos').get_public_url(supabase_processed)
+            # upload processed video
+            # now = datetime.now()
+            # date_time = now.strftime("%m-%d-%Y_%H-%M-%S")
+            # supabase_processed = f"processed/{date_time}_{video.name}"
+            
+            # try:
+            #     with open(target_path, 'rb') as f:
+            #         supabase.storage.from_("videos").upload(file=f,path=supabase_processed, file_options={"content-type": "video/mp4"})
+            # except Exception as e:
+            #     if e.args[0]['error'] != 'Duplicate': raise e
+            # finally:
+            #     processed_url = supabase.storage.from_('videos').get_public_url(supabase_processed)
 
-                # print("RAW", raw_url)
-                # print("PROCESSED", processed_url)
+            # print("RAW", raw_url)
+            # print("PROCESSED", processed_url)
 
-                new_diagnostic = {
-                    'status': 'loaded',
-                    'xy': json,
-                    'fps': video_info.fps,
-                    'total_frames': video_info.total_frames,
-                    'raw_video_url': raw_url,
-                    # 'processed_video_url': processed_url
-                }
+            new_diagnostic = {
+                'status': 'loaded',
+                'xy': json,
+                'fps': video_info.fps,
+                'total_frames': video_info.total_frames,
+                'raw_video_url': raw_url,
+                # 'processed_video_url': processed_url
+            }
 
-                print(new_diagnostic)
+            print(new_diagnostic)
 
-                updated_diagnostic = supabase.table('diagnostics').update(new_diagnostic).eq('id', new_diagnostic_id).execute()
+            updated_diagnostic = supabase.table('diagnostics').update(new_diagnostic).eq('id', new_diagnostic_id).execute()
 
         return HttpResponse(status=200)
     except Exception as e:
