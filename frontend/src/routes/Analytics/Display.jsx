@@ -5,6 +5,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import * as Separator from '@radix-ui/react-separator';
 import { PlusIcon } from '@radix-ui/react-icons';
+import PuffLoader from "react-spinners/PuffLoader";
 
 import NewDiagnostic from './NewDiagnostic';
 import Chart from './Chart';
@@ -31,16 +32,28 @@ const Display = ({ selectedMatch }) => {
             })
     }, [selectedMatch])
 
-    const diagnosticOptions = diagnostics.map((diagnostic) => (
-        <div key={diagnostic.id} className="flex items-center gap-5">
-            <RadioGroup.Item key={diagnostic.id} className="AnalyticsRadioGroupItem" value={diagnostic.id} id="r1">
-                <RadioGroup.Indicator className="AnalyticsRadioGroupIndicator" />
-            </RadioGroup.Item>
-            <label className="Label" htmlFor="r1">
-                {diagnostic.title}
-            </label>
-        </div>
-    ))
+    const diagnosticOptions = diagnostics.map((diagnostic) => {
+        if (diagnostic.status === "loading") {
+            return (
+                <div key={diagnostic.id} className="flex items-center gap-5">
+                    <PuffLoader color="#36d7b7" size={15} />
+                    <span className="opacity-20">{diagnostic.title}</span>
+                </div>
+            )
+        } else if (diagnostic.status === "loaded") {
+            return (
+                <div key={diagnostic.id} className="flex items-center gap-5">
+                    <RadioGroup.Item key={diagnostic.id} className="AnalyticsRadioGroupItem" value={diagnostic.id} id="r1">
+                        <RadioGroup.Indicator className="AnalyticsRadioGroupIndicator" />
+                    </RadioGroup.Item>
+                    <label className="Label" htmlFor="r1">
+                        {diagnostic.title}
+                    </label>
+                </div>
+            )
+        }
+
+    })
 
     return (
         <div className="w-full h-full flex">
