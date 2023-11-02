@@ -1,11 +1,14 @@
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
-import { signOut } from "../../api";
+import { signOut, getUserInfo } from "../../api";
 
 const pathIcons = {
     dashboard: '🏠'
 }
 
 const Utilities = () => {
+    const [currentUser, setCurrentUser] = useState(null)
+
     const navigate = useNavigate();
     const location = useLocation();
     const path = location.pathname.split("/");
@@ -23,10 +26,17 @@ const Utilities = () => {
         navigate("/login")
     }
 
+    useEffect(() => {
+        getUserInfo().then((res) => {
+            setCurrentUser(res)
+        })
+    }, [])
+
     return (
         <div className='flex flex-row w-full py-5 px-8 justify-between'>
             <div className='text-white'>
-                <p>Pages{pathString}</p>
+                {/* <p>Pages{pathString}</p> */}
+                {/* <p>Hello, {currentUser.first_name} {currentUser.last_name}</p> */}
             </div>
             <div className='flex-none'>
                 <span onClick={handleLogout}>🙍</span>

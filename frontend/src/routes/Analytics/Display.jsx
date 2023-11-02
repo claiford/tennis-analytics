@@ -32,7 +32,7 @@ const Display = ({ selectedMatch }) => {
     }, [selectedMatch])
 
     const diagnosticOptions = diagnostics.map((diagnostic) => (
-        <div className="flex items-center gap-5">
+        <div key={diagnostic.id} className="flex items-center gap-5">
             <RadioGroup.Item key={diagnostic.id} className="AnalyticsRadioGroupItem" value={diagnostic.id} id="r1">
                 <RadioGroup.Indicator className="AnalyticsRadioGroupIndicator" />
             </RadioGroup.Item>

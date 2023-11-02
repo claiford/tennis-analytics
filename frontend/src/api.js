@@ -12,6 +12,15 @@ import supabase from './connnections';
 //  d8888888888 Y88b. .d88P     888     888    888 
 // d88P     888  "Y88888P"      888     888    888 
 
+export async function getUserInfo() {
+    const { data: { user } } = await supabase.auth.getUser()
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/user`)
+    
+    const currentUser = response.data.profiles.find((profile) => profile.id === user.id)
+    
+    return currentUser
+}
+
 export async function signUpNewUser(formData) {
     console.log(formData)
     try {
