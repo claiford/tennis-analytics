@@ -274,11 +274,7 @@ def process_video(position, source_path, target_path):
 
   print((video_info.width, video_info.height))
 
-  result = cv2.VideoWriter(target_path,  
-                         cv2.VideoWriter_fourcc(*'mp4v'), 
-                         video_info.fps,
-                         (video_info.width, video_info.height)
-                         ) 
+  result = cv2.VideoWriter(target_path, cv2.VideoWriter_fourcc('V','P','8','0'), video_info.fps, (video_info.width, video_info.height)) 
   
   # with VideoSink(target_path, video_info) as sink:
   for frame in tqdm(generator, total=video_info.total_frames):
