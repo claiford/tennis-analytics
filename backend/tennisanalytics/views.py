@@ -137,11 +137,6 @@ def createDiagnostic(request):
             position = request.POST['position']
             source_path = video.temporary_file_path()
 
-            cap = cv2.VideoCapture(source_path)
-            # print("FOURCC", cap.get(cv2.CAP_PROP_FOURCC))
-            
-            target_path = os.path.join(os.getcwd(), 'result.mp4')
-
             # upload raw video
             supabase_raw = f"raw/{video.name}"
             try:
@@ -166,33 +161,35 @@ def createDiagnostic(request):
             # create temp file and start processing
             # with NamedTemporaryFile(mode='w+b', suffix='.mp4') as target_file:
                 # target_path = target_file.name
+            target_path = os.path.join(os.getcwd(), 'result.webM')
             print("TARGET PATH", target_path)
 
             json, video_info = process_video(position, source_path, target_path)
 
             # upload processed video
-            # now = datetime.now()
-            # date_time = now.strftime("%m-%d-%Y_%H-%M-%S")
-            # supabase_processed = f"processed/{date_time}_{video.name}"
+            now = datetime.now()
+            date_time = now.strftime("%m-%d-%Y_%H-%M-%S")
+            supabase_processed = f"processed/{date_time}_{video.name}"
             
-            # try:
-            #     with open(target_path, 'rb') as f:
-            #         supabase.storage.from_("videos").upload(file=f,path=supabase_processed, file_options={"content-type": "video/mp4"})
-            # except Exception as e:
-            #     if e.args[0]['error'] != 'Duplicate': raise e
-            # finally:
-            #     processed_url = supabase.storage.from_('videos').get_public_url(supabase_processed)
+            try:
+                with open(target_path, 'rb') as f:
+                    supabase.storage.from_("videos").upload(file=f,path=supabase_processed, file_options={"content-type": "video/mp4"})
+            except Exception as e:
+                if e.args[0]['error'] != 'Duplicate': raise e
+            finally:
+                processed_url = supabase.storage.from_('videos').get_public_url(supabase_processed)
 
-            # print("RAW", raw_url)
-            # print("PROCESSED", processed_url)
+            print("RAW", raw_url)
+            print("PROCESSED", processed_url)
 
             new_diagnostic = {
                 'status': 'loaded',
+                'position': position,
                 'xy': json,
                 'fps': video_info.fps,
                 'total_frames': video_info.total_frames,
                 'raw_video_url': raw_url,
-                # 'processed_video_url': processed_url
+                'processed_video_url': processed_url
             }
 
             print(new_diagnostic)
