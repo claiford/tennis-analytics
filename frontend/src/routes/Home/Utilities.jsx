@@ -26,17 +26,17 @@ const Utilities = () => {
         navigate("/login")
     }
 
-    useEffect(() => {
-        getUserInfo().then((res) => {
-            setCurrentUser(res)
-        })
-    }, [])
+    // useEffect(() => {
+    //     getUserInfo().then((res) => {
+    //         setCurrentUser(res)
+    //     })
+    // }, [])
 
     return (
         <div className='flex flex-row w-full py-5 px-8 justify-between'>
             <div className='text-white'>
                 {/* <p>Pages{pathString}</p> */}
-                {/* <p>Hello, {currentUser.first_name} {currentUser.last_name}</p> */}
+                {/* <p>Hello, {currentUser?.first_name} {currentUser?.last_name}</p> */}
             </div>
             <div className='flex-none'>
                 <span onClick={handleLogout}>🙍</span>
