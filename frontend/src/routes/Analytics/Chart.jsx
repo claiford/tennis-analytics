@@ -181,7 +181,7 @@ const Chart = ({ selectedDiagnostic }) => {
 	}, [selectedDiagnostic]);
 
 	return (
-		<div className="flex justify-center relative">
+		<div className="flex justify-center relative mt-9">
 			<div className="w-full flex justify-center" id="Chart" ref={heatmapRef}></div>
 			<img className="absolute top-0 opacity-20" src={courtBackground} width={GRIDSIZE * COLS}></img>
 		</div>

@@ -31,7 +31,7 @@ const Display = ({ selectedDiagnostic }) => {
     }, [selectedDiagnostic])
 
     return (
-        <div className="h-full flex justify-center items-center gap-3 p-3">
+        <div className="h-full flex gap-3 p-3">
             <div className="h-full flex flex-col">
                 <Form.Root onSubmit={handleSubmit}>
                     <Form.Field className="AnalyticsFormField" name="title">

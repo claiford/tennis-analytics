@@ -182,6 +182,7 @@ export async function getDiagnostics(match_id) {
     try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/diagnostics`)
         const diagnostics = response.data.diagnostics.filter((diagnostic) => diagnostic.match_id === match_id)
+        diagnostics.sort((a, b) => a.id - b.id)
         return diagnostics
     } catch (e) {
         throw e
