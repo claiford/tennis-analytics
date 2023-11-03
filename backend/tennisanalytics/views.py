@@ -159,25 +159,25 @@ def createDiagnostic(request):
             new_diagnostic_id = created_diagnostic.data[0]['id']
 
             # create temp file and start processing
-            # with NamedTemporaryFile(mode='w+b', suffix='.mp4') as target_file:
-                # target_path = target_file.name
-            target_path = os.path.join(os.getcwd(), 'result.webM')
-            print("TARGET PATH", target_path)
+            with NamedTemporaryFile(mode='w+b', suffix='.webm') as target_file:
+                target_path = target_file.name
+                # target_path = os.path.join(os.getcwd(), 'result.webM')
+                print("TARGET PATH", target_path)
 
-            json, video_info = process_video(position, source_path, target_path)
-
-            # upload processed video
-            now = datetime.now()
-            date_time = now.strftime("%m-%d-%Y_%H-%M-%S")
-            supabase_processed = f"processed/{date_time}_{video.name}"
-            
-            try:
-                with open(target_path, 'rb') as f:
-                    supabase.storage.from_("videos").upload(file=f,path=supabase_processed, file_options={"content-type": "video/mp4"})
-            except Exception as e:
-                if e.args[0]['error'] != 'Duplicate': raise e
-            finally:
-                processed_url = supabase.storage.from_('videos').get_public_url(supabase_processed)
+                json, video_info = process_video(position, source_path, target_path)
+                print("JSON", json)
+                # upload processed video
+                now = datetime.now()
+                date_time = now.strftime("%m-%d-%Y_%H-%M-%S")
+                supabase_processed = f"processed/{date_time}_{video.name}"
+                
+                try:
+                    with open(target_path, 'rb') as f:
+                        supabase.storage.from_("videos").upload(file=f,path=supabase_processed, file_options={"content-type": "video/mp4"})
+                except Exception as e:
+                    if e.args[0]['error'] != 'Duplicate': raise e
+                finally:
+                    processed_url = supabase.storage.from_('videos').get_public_url(supabase_processed)
 
             print("RAW", raw_url)
             print("PROCESSED", processed_url)

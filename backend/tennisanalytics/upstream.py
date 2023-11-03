@@ -281,23 +281,24 @@ def process_video(position, source_path, target_path):
       res_frame, player_positions_transformed = process_frame(frame, video_info)
 
       if player_positions_transformed is not None:
-        if position == "front":
-          player_positions.append(player_positions_transformed[0])
-        elif position == "back":
-          player_positions.append(player_positions_transformed[1])
+        # if position == "front":
+        #   player_positions.append(player_positions_transformed[0])
+        # elif position == "back":
+        #   player_positions.append(player_positions_transformed[1])
+        player_positions.append(player_positions_transformed)
       else:
         player_positions.append([None, None])
 
       result.write(res_frame) 
           # sink.write_frame(res_frame)
-      # break
-  
+      break
   result.release()
   cv2.destroyAllWindows()
 
   df = pd.DataFrame(
     data=player_positions,
-    columns=['x', 'y']
+    columns=['xy_front', 'xy_back']
+    # columns=['x', 'y']
   )
   
   json = df.to_json(orient='index')

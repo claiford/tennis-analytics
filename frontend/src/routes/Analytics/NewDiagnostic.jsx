@@ -6,7 +6,7 @@ import * as RadioGroup from '@radix-ui/react-radio-group';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
 
-const NewDiagnostic = ({ handleAdd }) => {
+const NewDiagnostic = ({ handleAddDiagnostic }) => {
     const fileInput = createRef()
     const [form, setForm] = useState({
         title: "",
@@ -25,7 +25,7 @@ const NewDiagnostic = ({ handleAdd }) => {
     const handleSubmit = (e) => {
         e.preventDefault()
         const video = fileInput.current.files[0]
-        handleAdd({
+        handleAddDiagnostic({
             ...form,
             video: video,
         })
