@@ -1,90 +1,70 @@
 import { useState, useEffect } from 'react'
-import { getDiagnostics, addDiagnostic } from '../../api';
+import { updateDiagnosticNotes } from '../../api';
 
-import * as Dialog from '@radix-ui/react-dialog';
-import * as RadioGroup from '@radix-ui/react-radio-group';
-import * as Separator from '@radix-ui/react-separator';
-import { PlusIcon } from '@radix-ui/react-icons';
-import PuffLoader from "react-spinners/PuffLoader";
+import * as Form from '@radix-ui/react-form';
+import { Pencil1Icon, PaperPlaneIcon } from '@radix-ui/react-icons';
 
-import NewDiagnostic from './NewDiagnostic';
 import Chart from './Chart';
 
-const Display = ({ selectedMatch }) => {
-    const [diagnostics, setDiagnostics] = useState([])
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [selectedDiagnostic, setSelectedDiagnostic] = useState(null)
-
-    const handleAdd = (formData) => {
-        setDialogOpen(false)
-        addDiagnostic(selectedMatch.id, formData)
-    }
+const Display = ({ selectedDiagnostic }) => {
+    const [editNotes, setEditNotes] = useState()
+    const [notes, setNotes] = useState("")
 
     const handleChange = (e) => {
-        console.log("setting")
-        setSelectedDiagnostic(diagnostics.find((diagnostic) => diagnostic.id === Number(e.target.value)))
+        console.log(e.target.value)
+        setNotes(e.target.value)
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        setEditNotes(false)
+
+        updateDiagnosticNotes(selectedDiagnostic.id, notes)
+    }
+
+    const toggleForm = () => {
+        setEditNotes((prev) => !prev)
     }
 
     useEffect(() => {
-        getDiagnostics(selectedMatch.id)
-            .then((res) => {
-                setDiagnostics(res)
-            })
-    }, [selectedMatch])
-
-    const diagnosticOptions = diagnostics.map((diagnostic) => {
-        if (diagnostic.status === "loading") {
-            return (
-                <div key={diagnostic.id} className="flex items-center gap-5">
-                    <PuffLoader color="#36d7b7" size={15} />
-                    <span className="opacity-20">{diagnostic.title}</span>
-                </div>
-            )
-        } else if (diagnostic.status === "loaded") {
-            return (
-                <div key={diagnostic.id} className="flex items-center gap-5">
-                    <RadioGroup.Item key={diagnostic.id} className="AnalyticsRadioGroupItem" value={diagnostic.id} id="r1">
-                        <RadioGroup.Indicator className="AnalyticsRadioGroupIndicator" />
-                    </RadioGroup.Item>
-                    <label className="Label" htmlFor="r1">
-                        {diagnostic.title}
-                    </label>
-                </div>
-            )
-        }
-
-    })
+        setNotes(selectedDiagnostic.notes)
+    }, [selectedDiagnostic])
 
     return (
-        <div className="w-full h-full flex">
-            <div className="w-1/4 h-full flex flex-col items-center gap-2 p-2">
-                <p>select diagnostic</p>
-                <Separator.Root className="SeparatorRoot h-0.5 w-1/2" orientation="horizontal" />
-                <div className="flex flex-col items-center gap-4 m-2">
-                    <form>
-                        <RadioGroup.Root
-                            className="flex flex-col gap-4"
-                            orientation="horizontal"
-                            onChange={handleChange}
-                            name="radio"
-                        >
-                            {diagnosticOptions}
-                        </RadioGroup.Root>
-                    </form>
-                    <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
-                        <Dialog.Trigger asChild>
-                            <button className="ToolbarButton"><PlusIcon /></button>
-                        </Dialog.Trigger>
-                        <NewDiagnostic handleAdd={handleAdd} />
-                    </Dialog.Root>
-                </div>
-
-
+        <div className="h-full flex gap-3 p-3">
+            <div className="h-full flex flex-col">
+                <Form.Root onSubmit={handleSubmit}>
+                    <Form.Field className="AnalyticsFormField" name="title">
+                        <div className="flex justify-between items-baseline">
+                            <Form.Label className="AnalyticsFormLabel">Notes</Form.Label>
+                            {editNotes ? (
+                                <Form.Submit className="notes-btn">
+                                    <PaperPlaneIcon />
+                                </Form.Submit>
+                            ) : (
+                                <button className="notes-btn" onClick={toggleForm}>
+                                    <Pencil1Icon />
+                                </button>
+                            )}
+                        </div>
+                        <Form.Control asChild>
+                            <textarea
+                                className="TextArea text-xs rounded-md p-2"
+                                name="notes"
+                                rows={10}
+                                disabled={!editNotes}
+                                value={notes}
+                                onChange={handleChange}
+                            >
+                            </textarea>
+                        </Form.Control>
+                    </Form.Field>
+                </Form.Root>
+                <video key={selectedDiagnostic.processed_video_url} controls>
+                    <source src={selectedDiagnostic.processed_video_url} type="video/webm" />
+                </video>
             </div>
-            {selectedDiagnostic &&
-                <Chart selectedDiagnostic={selectedDiagnostic} />
-            }
-
+            <Chart selectedDiagnostic={selectedDiagnostic} />
         </div>
     )
 };

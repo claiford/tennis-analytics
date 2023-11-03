@@ -182,6 +182,7 @@ export async function getDiagnostics(match_id) {
     try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/diagnostics`)
         const diagnostics = response.data.diagnostics.filter((diagnostic) => diagnostic.match_id === match_id)
+        diagnostics.sort((a, b) => a.id - b.id)
         return diagnostics
     } catch (e) {
         throw e
@@ -212,6 +213,19 @@ export async function addDiagnostic(match_id, formData) {
             }
         })
         return response.data.diagnostics
+    } catch (e) {
+        throw e
+    }
+}
+
+export async function updateDiagnosticNotes(diagnostic_id, newNotes) {
+    try {
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/diagnostics/write`, {
+            diagnostic_id: diagnostic_id,
+            notes: newNotes
+        })
+        // const diagnostics = response.data.diagnostics.filter((diagnostic) => diagnostic.match_id === match_id)
+        return response
     } catch (e) {
         throw e
     }

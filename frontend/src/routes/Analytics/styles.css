@@ -98,6 +98,31 @@
 	.SeparatorRoot {
 		background-color: var(--violet-5);
 	}
+
+	.TextArea {
+		background-color: var(--violet-5);
+		resize: none;
+		box-shadow: 0 0 2px var(--violet-9) inset;
+	}
+
+	.TextArea:disabled {
+		background-color: var(--black-a2);
+		box-shadow: none;
+	}
+
+	.notes-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 4px;
+		padding: 0.2rem 0.5rem;
+		line-height: 1;
+		color: var(--violet-11);
+	}
+
+	.notes-btn:hover {
+		background-color: var(--black-a2);
+	}
 }
 
 .AnalyticsDialogOverlay {

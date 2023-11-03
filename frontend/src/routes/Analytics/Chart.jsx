@@ -3,6 +3,10 @@ import * as d3 from 'd3';
 
 import courtBackground from '../..//images/tennis-court_2696x3976.jpg';
 
+const COLS = 27
+const ROWS = 40
+const GRIDSIZE = 15
+
 const Chart = ({ selectedDiagnostic }) => {
 	const heatmapRef = useRef(null);
 
@@ -63,12 +67,12 @@ const Chart = ({ selectedDiagnostic }) => {
 		}
 
 		// first, initialize the variables that are independent of the data
-		const cols = 27
-		const rows = 40
-		var gridSize = 16
-		var margin = { top: 30, right: 0, bottom: 30, left: 0 }
-		var width = cols * gridSize
-		var height = rows * gridSize
+		const cols = COLS
+		const rows = ROWS
+		const gridSize = GRIDSIZE
+		const margin = { top: 30, right: 0, bottom: 30, left: 0 }
+		const width = cols * gridSize
+		const height = rows * gridSize
 		var legendElementWidth = gridSize * 3
 		var colors = ["#EBEDF0", "#C6E48B", "#7BC96F", "#239A3B", "#196127"];
 
@@ -177,9 +181,9 @@ const Chart = ({ selectedDiagnostic }) => {
 	}, [selectedDiagnostic]);
 
 	return (
-		<div className="flex-auto flex justify-center relative">
+		<div className="flex justify-center relative mt-9">
 			<div className="w-full flex justify-center" id="Chart" ref={heatmapRef}></div>
-			<img className="absolute top-0 opacity-20" src={courtBackground} width={432}></img>
+			<img className="absolute top-0 opacity-20" src={courtBackground} width={GRIDSIZE * COLS}></img>
 		</div>
 	)
 };

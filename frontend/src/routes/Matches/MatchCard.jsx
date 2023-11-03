@@ -11,7 +11,7 @@ const MatchCard = ({ match }) => {
                 </p>
                 <div className="h-full flex-auto flex items-center justify-between">
                     <Separator.Root className="SeparatorRoot h-full w-0.5" orientation='vertical' />
-                    <p className="">
+                    <p className="text-left basis-1/4">
                         {match.where}
                     </p>
                     <div className="flex flex-col">

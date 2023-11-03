@@ -113,7 +113,7 @@ def completeMatch(request):
         if request.method == "PUT":
             user_id, match_id = json.loads(request.body).values()
 
-            new_match = supabase.table('matches').update({'status': 'completed'}).eq('id', match_id).execute()
+            updated_match = supabase.table('matches').update({'status': 'completed'}).eq('id', match_id).execute()
         
         return HttpResponse(status=200)
     except Exception as e:
@@ -201,25 +201,13 @@ def createDiagnostic(request):
         print(e)
         return HttpResponseBadRequest("Bad Request")
 
-def detail(request, id):
-    data = Movie.objects.get(pk=id)
-    return render(request, 'movies/detail.html', {'movie': data})
-
-def add(request):
-    title = request.POST.get('title')
-    year = request.POST.get('year')
-
-    if title and year:
-        movie = Movie(title=title, year=year)
-        movie.save()
-        return HttpResponseRedirect('/movies')
-
-    return render(request, 'movies/add.html')
-
-def delete(request, id):
+def editDiagnosticNotes(request):
     try:
-        movie = Movie.objects.get(pk=id)
-    except:
-        raise Http404("Movie does not exist!")
-    movie.delete()
-    return HttpResponseRedirect('/movies')
+        body = json.loads(request.body)
+        # diagnostics = supabase.table('diagnostics').select("*").execute()
+        updated_diagnostic = supabase.table('diagnostics').update({'notes': body['notes']}).eq('id', body['diagnostic_id']).execute()
+        
+        return HttpResponse(status=200)
+    except Exception as e:
+        print(e)
+        return HttpResponseBadRequest("Bad Request")
