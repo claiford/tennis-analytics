@@ -216,3 +216,16 @@ export async function addDiagnostic(match_id, formData) {
         throw e
     }
 }
+
+export async function updateDiagnosticNotes(diagnostic_id, newNotes) {
+    try {
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/diagnostics/write`, {
+            diagnostic_id: diagnostic_id,
+            notes: newNotes
+        })
+        // const diagnostics = response.data.diagnostics.filter((diagnostic) => diagnostic.match_id === match_id)
+        return response
+    } catch (e) {
+        throw e
+    }
+}

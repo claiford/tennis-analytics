@@ -34,8 +34,5 @@ urlpatterns = [
     
     path('api/diagnostics', views.diagnostics),
     path('api/diagnostics/create', views.createDiagnostic),
-
-    path('movies/<int:id>', views.detail),
-    path('movies/<int:id>/delete', views.delete),
-
+    path('api/diagnostics/write', views.editDiagnosticNotes),
 ]
