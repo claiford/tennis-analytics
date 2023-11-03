@@ -14,45 +14,60 @@ const Chart = ({ selectedDiagnostic }) => {
 		let gridObject = {}
 		for (let x = 1; x <= 27; x++) {
 			for (let y = 1; y <= 40; y++)
-				gridObject[`${x},${y}`] = 0
+				gridObject[`${x},${y}`] = {
+					pos: '',
+					value: 0
+				}
 		}
-		const xy_values = JSON.parse(selectedDiagnostic.xy)
-		for (const xy of Object.values(xy_values)) {
-			const x_round = Math.ceil(xy['x'] / 100)
-			const y_round = Math.ceil(xy['y'] / 100)
-			if (selectedDiagnostic.position === "front" && y_round < Math.ceil(1988 / 100)) {
+		const coords = JSON.parse(selectedDiagnostic.xy)
+		for (const xyxy of Object.values(coords)) {
+			const x_front = Math.ceil(xyxy['xy_front'][0] / 100)
+			const y_front = Math.ceil(xyxy['xy_front'][1] / 100)
+			const x_back = Math.ceil(xyxy['xy_back'][0] / 100)
+			const y_back = Math.ceil(xyxy['xy_back'][1] / 100)
+			if (y_front < Math.ceil(1988 / 100)) {
 				continue
-			} else if (selectedDiagnostic.position === "back" && y_round > Math.ceil(1988 / 100)) {
+			} else if (y_back > Math.ceil(1988 / 100)) {
 				continue
-			}
-			if (gridObject[`${x_round},${y_round}`] >= 0) {
-				gridObject[`${x_round},${y_round}`] += 1
+			} else {
+				if (`${x_front},${y_front}` in gridObject) {
+					gridObject[`${x_front},${y_front}`].value += 1
+					gridObject[`${x_front},${y_front}`].pos = "front"
+				}
+				if ([`${x_back},${y_back}`] in gridObject) {
+					gridObject[`${x_back},${y_back}`].value -= 1
+					gridObject[`${x_front},${y_front}`].pos = "back"
+				}
 			}
 		}
 		return gridObject
 	}
 
-	function generateFakeCommitData() {
-		var commitsPerDate = [];
-		for (let month = 0; month < 12; month++) {
-			// Get the number of days in the current month
-			const numberOfDays = new Date(2023, month + 1, 0).getDate();
-
-			// Loop through each day of the current month
-			for (let day = 1; day <= numberOfDays; day++) {
-				// Create a new Date object for the current day
-				const currentDate = new Date(2023, month, day, 5); // hack: added 5 hours to avoid midnight
-
-				// Add a new object to the array
-				commitsPerDate.push({
-					date: currentDate.toJSON().substring(0, 10),
-					count: Math.floor(Math.random() * 100)
-				});
-			}
-		}
-		// console.log(commitsPerDate)
-		return commitsPerDate
+	const color_picker = (d) => {
+		
 	}
+
+	// function generateFakeCommitData() {
+	// 	var commitsPerDate = [];
+	// 	for (let month = 0; month < 12; month++) {
+	// 		// Get the number of days in the current month
+	// 		const numberOfDays = new Date(2023, month + 1, 0).getDate();
+
+	// 		// Loop through each day of the current month
+	// 		for (let day = 1; day <= numberOfDays; day++) {
+	// 			// Create a new Date object for the current day
+	// 			const currentDate = new Date(2023, month, day, 5); // hack: added 5 hours to avoid midnight
+
+	// 			// Add a new object to the array
+	// 			commitsPerDate.push({
+	// 				date: currentDate.toJSON().substring(0, 10),
+	// 				count: Math.floor(Math.random() * 100)
+	// 			});
+	// 		}
+	// 	}
+	// 	// console.log(commitsPerDate)
+	// 	return commitsPerDate
+	// }
 
 	useEffect(() => {
 		const gridObject = generateData()
@@ -62,7 +77,8 @@ const Chart = ({ selectedDiagnostic }) => {
 			values.push({
 				x: grid[0].split(",")[0],
 				y: grid[0].split(",")[1],
-				data: grid[1]
+				data: grid[1].value,
+				position: grid[1].pos
 			})
 		}
 
@@ -74,8 +90,10 @@ const Chart = ({ selectedDiagnostic }) => {
 		const width = cols * gridSize
 		const height = rows * gridSize
 		var legendElementWidth = gridSize * 3
-		var colors = ["#EBEDF0", "#C6E48B", "#7BC96F", "#239A3B", "#196127"];
-
+		var colors_front = ["#EBEDF0", "#C6E48B", "#7BC96F", "#239A3B", "#196127"];
+		var colors_back = ["#EBEDF0", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"];
+		var colors_divergent = ["#bdebbf", "#EBEDF0", "#97ddec"]
+		
 		var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 		var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"]
 
@@ -87,9 +105,15 @@ const Chart = ({ selectedDiagnostic }) => {
 			.append("g") // an svg "group", similar to an html "div"
 		// .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-		var colorScale = d3.scaleOrdinal() // map array of values to array of colors
+		var colorScale_front = d3.scaleOrdinal() // map array of values to array of colors
 			.domain([0, 100]) // move this inside of data callback and change this to newValues if you use option code to generate domain from the data
-			.range(colors);
+			.range(colors_front);
+		var colorScale_back = d3.scaleLinear() // map array of values to array of colors
+			.domain([0, 5]) // move this inside of data callback and change this to newValues if you use option code to generate domain from the data
+			.range(colors_back);
+		var colorScale_divergent = d3.scaleDiverging() // map array of values to array of colors
+			.domain([-5, 0, 5]) // move this inside of data callback and change this to newValues if you use option code to generate domain from the data
+			.range(colors_divergent);
 
 		// svg.selectAll(".day") // add day labels
 		// 	.data(days)
@@ -140,10 +164,10 @@ const Chart = ({ selectedDiagnostic }) => {
 			.attr("rx", 4)
 			.attr("ry", 4)
 			.attr("class", "bordered")
-			.style("fill", function (d) { return colorScale(d.data); }) // use this line if you are not using the transition() to a new color
+			.style("fill", function (d) { return colorScale_divergent(d.data); }) // use this line if you are not using the transition() to a new color
 
-		heatMap.transition().duration(1000) // example d3 animation
-			.style("fill", function (d) { return colorScale(d.data); })
+		// heatMap.transition().duration(1000) // example d3 animation
+		// 	.style("fill", function (d) { return colorScale(d.data); })
 
 
 		// heatMap.append("title") // append and format title element

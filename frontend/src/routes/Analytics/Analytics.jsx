@@ -38,6 +38,8 @@ const Analytics = () => {
         e.preventDefault()
         setMatchDialogOpen(false)
         setSelectedMatch(completedMatches.find((match) => match.id === Number(e.target.match.value)))
+        setDiagnostics([])
+        setSelectedDiagnostic(null)
     };
 
     const handleAddDiagnostic = (formData) => {
