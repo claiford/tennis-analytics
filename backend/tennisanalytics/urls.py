@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from tennisanalytics import views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns # new
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,3 +37,5 @@ urlpatterns = [
     path('api/diagnostics/create', views.createDiagnostic),
     path('api/diagnostics/write', views.editDiagnosticNotes),
 ]
+
+urlpatterns += staticfiles_urlpatterns() # new
