@@ -93,7 +93,7 @@ export async function getCompletedMatches() {
 export async function getMatches() {
     try {
         const { data: { user } } = await supabase.auth.getUser()
-
+        
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/matches`)
         const matches = response.data.matches
         const mapping = response.data.mapping
@@ -193,19 +193,19 @@ export async function addDiagnostic(match_id, formData) {
     try {
         const { data: { user } } = await supabase.auth.getUser()
 
-        const data = {
-            user_id: user.id,
-            match_id: match_id,
-            title: formData.title,
-            position: formData.position,
-            video: formData.video
-        }
+        // const data = {
+        //     user_id: user.id,
+        //     match_id: match_id,
+        //     title: formData.title,
+        //     // position: formData.position,
+        //     video: formData.video
+        // }
 
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/diagnostics/create`, {
             user_id: user.id,
             match_id: match_id,
             title: formData.title,
-            position: formData.position,
+            // position: formData.position,
             video: formData.video
         }, {
             headers: {

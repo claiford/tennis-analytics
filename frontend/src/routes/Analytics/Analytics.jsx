@@ -34,6 +34,13 @@ const Analytics = () => {
     const [diagnosticDialogOpen, setDiagnosticDialogOpen] = useState(false);
     const [selectedDiagnostic, setSelectedDiagnostic] = useState(null)
 
+    const fetchData = () => {
+        getCompletedMatches()
+            .then((res) => {
+                setCompletedMatches(res)
+            })
+    }
+
     const handleSelectMatch = (e) => {
         e.preventDefault()
         setMatchDialogOpen(false)
@@ -52,12 +59,18 @@ const Analytics = () => {
     }
 
     useEffect(() => {
-        getCompletedMatches()
-            .then((res) => {
-                setCompletedMatches(res)
-            })
-    }, [])
+        fetchData()
+        // Set up an interval and store its ID
+        const intervalId = setInterval(() => {
+            // Code to run every 2 seconds
+            console.log('This code runs every 2 seconds');
+            fetchData();
+        }, 2000); // 2000 milliseconds = 2 seconds
 
+        // Clear the interval when the component is unmounted
+        return () => clearInterval(intervalId);
+    }, [])
+    
     useEffect(() => {
         if (selectedMatch) {
             getDiagnostics(selectedMatch.id)

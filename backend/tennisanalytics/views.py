@@ -134,7 +134,7 @@ def createDiagnostic(request):
         if request.method == "POST":
             video = request.FILES['video']
 
-            position = request.POST['position']
+            # position = request.POST['position']
             source_path = video.temporary_file_path()
 
             # upload raw video
@@ -164,7 +164,7 @@ def createDiagnostic(request):
                 # target_path = os.path.join(os.getcwd(), 'result.webM')
                 print("TARGET PATH", target_path)
 
-                json, video_info = process_video(position, source_path, target_path)
+                json, video_info = process_video(source_path, target_path)
                 print("JSON", json)
                 # upload processed video
                 now = datetime.now()
@@ -184,7 +184,7 @@ def createDiagnostic(request):
 
             new_diagnostic = {
                 'status': 'loaded',
-                'position': position,
+                # 'position': position,
                 'xy': json,
                 'fps': video_info.fps,
                 'total_frames': video_info.total_frames,

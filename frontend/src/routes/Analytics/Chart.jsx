@@ -21,6 +21,9 @@ const Chart = ({ selectedDiagnostic }) => {
 		}
 		const coords = JSON.parse(selectedDiagnostic.xy)
 		for (const xyxy of Object.values(coords)) {
+			if (xyxy['xy_front'] === null || xyxy['xy_back'] === null ) {
+				continue
+			}
 			const x_front = Math.ceil(xyxy['xy_front'][0] / 100)
 			const y_front = Math.ceil(xyxy['xy_front'][1] / 100)
 			const x_back = Math.ceil(xyxy['xy_back'][0] / 100)

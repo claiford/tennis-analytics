@@ -13,13 +13,7 @@ import Profile from './routes/Profile/Profile';
 import supabase from './connnections';
 
 function App() {
-  const [session, setSession] = useState(supabase.auth.getSession())
-
-  const authenticateUser = () => {
-    if (session) {
-      return 
-    }
-  }
+  const [session, setSession] = useState(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -39,7 +33,7 @@ function App() {
     <BrowserRouter>
       <div className="App h-screen font-raleway font-semibold">
         <Routes>
-          <Route path='/login' element={session ? <Navigate to="/dashboard" /> : <Landing />}></Route>
+          <Route path='/login' element={session ? <Navigate to="/matches" /> : <Landing />}></Route>
           <Route path='' element={session ? <Home /> : <Navigate to="/login" />}>
             <Route path='/dashboard' element={session ? <Dashboard /> : <Navigate to="/login" />} />
             <Route path='/matches' element={session ? <Matches /> : <Navigate to="/login" />} />

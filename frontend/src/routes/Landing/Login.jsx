@@ -27,7 +27,7 @@ const Login = () => {
         signInWithEmail(form).then((res) => {
             if (res === 'bearer') {
                 console.log("SIGNED IN")
-                navigate('/dashboard')
+                navigate('/matches')
             } else {
                 setLoginError(res);
             }

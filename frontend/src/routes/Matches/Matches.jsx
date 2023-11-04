@@ -29,21 +29,28 @@ const Matches = () => {
 
     const handleJoin = (match_id) => {
         joinMatch(match_id)
-        fetchData()
     }
 
     const handleLeave = (match_id) => {
         leaveMatch(match_id)
-        fetchData()
     }
 
     const handleComplete = (match_id) => {
         completeMatch(match_id)
-        fetchData()
     }
 
     useEffect(() => {
         fetchData()
+
+        // Set up an interval and store its ID
+        const intervalId = setInterval(() => {
+            // Code to run every 2 seconds
+            console.log('This code runs every 2 seconds');
+            fetchData();
+        }, 1000); // 2000 milliseconds = 2 seconds
+
+        // Clear the interval when the component is unmounted
+        return () => clearInterval(intervalId);
     }, [])
 
     const joinedMatchCards = matches.joined.map((match) => (

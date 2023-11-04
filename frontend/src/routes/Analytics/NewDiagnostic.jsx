@@ -10,7 +10,7 @@ const NewDiagnostic = ({ handleAddDiagnostic }) => {
     const fileInput = createRef()
     const [form, setForm] = useState({
         title: "",
-        position: "front",
+        // position: "front",
     })
 
     const handleChange = (e) => {
@@ -67,7 +67,7 @@ const NewDiagnostic = ({ handleAddDiagnostic }) => {
                         </Form.Control>
                     </Form.Field>
 
-                    <Form.Field className="AnalyticsFormField" name="position">
+                    {/* <Form.Field className="AnalyticsFormField" name="position">
                         <div className="flex justify-between items-baseline">
                             <Form.Label className="AnalyticsFormLabel">Position</Form.Label>
                         </div>
@@ -94,7 +94,7 @@ const NewDiagnostic = ({ handleAddDiagnostic }) => {
                                 </label>
                             </div>
                         </RadioGroup.Root>
-                    </Form.Field>
+                    </Form.Field> */}
 
                     <Form.Submit className="AnalyticsButton green mt-5">
                         Upload

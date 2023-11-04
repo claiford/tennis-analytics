@@ -196,7 +196,6 @@ def transform_player_positions(player_detections, court_quad, frame, draw=False)
   #   plt.title('Output')
 
   #   plt.show()
-
   return player_positions_transformed
 
 '''
@@ -263,7 +262,7 @@ def process_frame(frame, video_info, draw=False):
                                                                           
 '''
 
-def process_video(position, source_path, target_path):
+def process_video(source_path, target_path):
   ultralytics.checks()
   print("processing video")
 
@@ -276,29 +275,22 @@ def process_video(position, source_path, target_path):
 
   result = cv2.VideoWriter(target_path, cv2.VideoWriter_fourcc('V','P','8','0'), video_info.fps, (video_info.width, video_info.height)) 
   
-  # with VideoSink(target_path, video_info) as sink:
   for frame in tqdm(generator, total=video_info.total_frames):
       res_frame, player_positions_transformed = process_frame(frame, video_info)
 
       if player_positions_transformed is not None:
-        # if position == "front":
-        #   player_positions.append(player_positions_transformed[0])
-        # elif position == "back":
-        #   player_positions.append(player_positions_transformed[1])
         player_positions.append(player_positions_transformed)
       else:
         player_positions.append([None, None])
 
       result.write(res_frame) 
-          # sink.write_frame(res_frame)
-      break
+
   result.release()
   cv2.destroyAllWindows()
 
   df = pd.DataFrame(
     data=player_positions,
     columns=['xy_front', 'xy_back']
-    # columns=['x', 'y']
   )
   
   json = df.to_json(orient='index')
